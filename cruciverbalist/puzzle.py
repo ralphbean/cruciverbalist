@@ -3,6 +3,54 @@
 import itertools
 import pprint
 
+def form_like_voltron(word_dict):
+    """ Using my key, value pairs, form a crossword puzzle
+
+    Method must be a str and may be 'naive', 'hard' or 'genetic
+    """
+    n = len(word_dict.keys())
+    size = max(n * 2, max(map(lambda x : len(x), word_dict.keys())))
+    print "size is", size
+    print "   n is", n
+
+    perms = map(list, itertools.permutations(range(size), 2))
+    idens = map(list, zip(range(size), range(size)))
+    possibs = perms + idens
+    print "possibs is", len(possibs)
+    
+    cartesian = list(itertools.product(possibs, ['across', 'down']))
+    print "cartesi is", len(cartesian)
+    print "w_dict  is", len(word_dict)
+    every_possible = itertools.permutations(cartesian, r=len(word_dict))
+
+    print "testing them"
+    scoreboard = {}
+
+    def form_it(p):
+        puz = Puzzle(word_dict)
+        for i in range(len(word_dict.keys())):
+            puz._voltron[word_dict.keys()[i]] = {
+                'r' : p[i][0][0],
+                'c' : p[i][0][1],
+                'd' : p[i][1],
+            }
+
+        if puz.valid():
+            count = puz.count_letters()
+            if count not in scoreboard:
+                print "New one...", count
+                print puz 
+            scoreboard[count] = scoreboard.get(count, 0) + 1
+        return puz
+
+    puzzles = map(form_it, every_possible) 
+
+    print len(every_possible), "total possible combos"
+    print "Scoreboard is..."
+    pprint.pprint(scoreboard)
+
+    self._formed = True
+
 class InvalidPuzzleException(Exception):
     pass
 class Puzzle(dict):
@@ -12,50 +60,7 @@ class Puzzle(dict):
         self.F = '#'
         super(Puzzle, self).__init__(*args, **kwargs)
 
-    def form_like_voltron(self):
-        """ Using my key, value pairs, form a crossword puzzle
-
-        Method must be a str and may be 'naive', 'hard' or 'genetic
-        """
-        self._voltron = {}
-        n = len(self.keys())
-        size = max(n * 2, max(map(lambda x : len(x), self.keys())))
-        print "size is", size
-        print "   n is", n
-
-        perms = map(list, itertools.permutations(range(size), 2))
-        idens = map(list, zip(range(size), range(size)))
-        possibs = perms + idens
-        print "possibs is", len(possibs)
-        
-        cartesian = list(itertools.product(possibs, ['across', 'down']))
-        print "cartesi is", len(cartesian)
-        print "   self is", len(self)
-        every_possible = itertools.permutations(cartesian, r=len(self))
-
-        print "testing them"
-        scoreboard = {}
-        for p in every_possible:
-            for i in range(len(self.keys())):
-                self._voltron[self.keys()[i]] = {
-                    'r' : p[i][0][0],
-                    'c' : p[i][0][1],
-                    'd' : p[i][1],
-                }
-
-            if self.valid():
-                count = self.count_letters()
-                if count not in scoreboard:
-                    print "New one...", count
-                    print self
-                scoreboard[count] = scoreboard.get(count, 0) + 1
-
-        print len(every_possible), "total possible combos"
-        print "Scoreboard is..."
-        pprint.pprint(scoreboard)
-
-        self._formed = True
-   
+  
     def count_letters(self):
         grid = self.build_grid()
         count = 0
@@ -186,6 +191,5 @@ class Puzzle(dict):
 if __name__ == '__main__':
     words = ['trotsky', 'bakunin', 'lenin', 'marx']
     d = dict([(w, '') for w in words])
-    p = Puzzle(d)
-    p.form_like_voltron()
+    form_like_voltron(d)
 
