@@ -1,1 +1,4 @@
 #
+
+class InvalidPuzzleException(Exception):
+    pass

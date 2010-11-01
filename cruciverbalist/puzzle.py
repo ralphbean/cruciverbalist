@@ -3,6 +3,8 @@
 import itertools
 import pprint
 
+from cruciverbalist import InvalidPuzzleException
+
 def form_like_voltron(word_dict):
     """ Using my key, value pairs, form a crossword puzzle
 
@@ -51,15 +53,12 @@ def form_like_voltron(word_dict):
 
     self._formed = True
 
-class InvalidPuzzleException(Exception):
-    pass
 class Puzzle(dict):
     def __init__(self, *args, **kwargs):
         self._formed = False
         self._voltron = {}
         self.F = '#'
         super(Puzzle, self).__init__(*args, **kwargs)
-
   
     def count_letters(self):
         grid = self.build_grid()
