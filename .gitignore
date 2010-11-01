@@ -1,0 +1,9 @@
+venv-apply
+*.pyc
+*.swp
+apply.egg-info
+ez_setup
+devdata.db
+tw2*
+virtualenv-apply
+devdata.db*
