@@ -106,11 +106,13 @@ class Puzzle(dict):
                             self._voltron[k]['d'] == 'across'):
                         continue
                     word = k
-                
+               
+                # make sure i'm isolated if I'm isolated
                 if not word and grid[r][_c+1] != self.F:
                     return False
                 
                 if word:
+                    # otherwise.. scan right and verify
                     for i in range(len(word)):
                         if grid[r][_c+i] == word[i]:
                             continue
@@ -137,10 +139,12 @@ class Puzzle(dict):
                         continue
                     word = k
 
+                # make sure i'm isolated if I'm isolated
                 if not word and grid[_r+1][c] != self.F:
                     return False
 
                 if word:
+                    # otherwise.. scan down and verify
                     for i in range(len(word)):
                         if grid[_r+i][c] == word[i]:
                             continue
@@ -149,9 +153,6 @@ class Puzzle(dict):
                     if (len(grid[_r]) > r + len(word) and
                         grid[_r+len(word)][c] != self.F):
                         return False
-
-                
-                
         except InvalidPuzzleException:
             return False
         return True
@@ -189,7 +190,7 @@ class Puzzle(dict):
         return grid
 
 if __name__ == '__main__':
-    words = ['trotsky', 'bakunin', 'lenin', 'marx']
+    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
     d = dict([(w, '') for w in words])
     form_like_voltron(d)
 
