@@ -1,64 +1,19 @@
 #!/usr/bin/env python
 
-import itertools
-import pprint
+from methods import NaiveMethod
 
-from cruciverbalist import InvalidPuzzleException
-
-def form_like_voltron(word_dict):
-    """ Using my key, value pairs, form a crossword puzzle
-
-    Method must be a str and may be 'naive', 'hard' or 'genetic
-    """
-    n = len(word_dict.keys())
-    size = max(n * 2, max(map(lambda x : len(x), word_dict.keys())))
-    print "size is", size
-    print "   n is", n
-
-    perms = map(list, itertools.permutations(range(size), 2))
-    idens = map(list, zip(range(size), range(size)))
-    possibs = perms + idens
-    print "possibs is", len(possibs)
-    
-    cartesian = list(itertools.product(possibs, ['across', 'down']))
-    print "cartesi is", len(cartesian)
-    print "w_dict  is", len(word_dict)
-    every_possible = itertools.permutations(cartesian, r=len(word_dict))
-
-    print "testing them"
-    scoreboard = {}
-
-    def form_it(p):
-        puz = Puzzle(word_dict)
-        for i in range(len(word_dict.keys())):
-            puz._voltron[word_dict.keys()[i]] = {
-                'r' : p[i][0][0],
-                'c' : p[i][0][1],
-                'd' : p[i][1],
-            }
-
-        if puz.valid():
-            count = puz.count_letters()
-            if count not in scoreboard:
-                print "New one...", count
-                print puz 
-            scoreboard[count] = scoreboard.get(count, 0) + 1
-
-    for p in every_possible:
-        form_it(p)
-
-    print len(every_possible), "total possible combos"
-    print "Scoreboard is..."
-    pprint.pprint(scoreboard)
-
-    self._formed = True
+class InvalidPuzzleException(Exception):
+        pass
 
 class Puzzle(dict):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, method=NaiveMethod(), **kwargs):
         self._formed = False
         self._voltron = {}
         self.F = '#'
-        super(Puzzle, self).__init__(*args, **kwargs)
+
+        super(Puzzle, self).__init__(**kwargs)
+        print type(method)
+        self = method.produce(self)
   
     def count_letters(self):
         grid = self.build_grid()
@@ -189,7 +144,10 @@ class Puzzle(dict):
         return grid
 
 if __name__ == '__main__':
-    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
+#    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
+    words = ['foo', 'far']
     d = dict([(w, '') for w in words])
-    form_like_voltron(d)
+    p = Puzzle(method=NaiveMethod(), **d)
+    print "Done"
+    print p
 
