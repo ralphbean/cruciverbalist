@@ -41,9 +41,9 @@ def form_like_voltron(word_dict):
                 print "New one...", count
                 print puz 
             scoreboard[count] = scoreboard.get(count, 0) + 1
-        return puz
 
-    puzzles = map(form_it, every_possible) 
+    for p in every_possible:
+        form_it(p)
 
     print len(every_possible), "total possible combos"
     print "Scoreboard is..."
