@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from methods import NaiveMethod
+from methods import GeneticMethod
 
 class InvalidPuzzleException(Exception):
         pass
@@ -147,7 +148,7 @@ if __name__ == '__main__':
 #    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
     words = ['foo', 'far']
     d = dict([(w, '') for w in words])
-    p = Puzzle(method=NaiveMethod(), **d)
+    p = Puzzle(method=GeneticMethod(), **d)
     print "Done"
     print p
 
