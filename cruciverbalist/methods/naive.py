@@ -4,6 +4,19 @@ import pprint
 
 from core import BaseMethod
 
+def form_it(p, word_dict):
+    for i in range(len(word_dict.keys())):
+        word_dict._voltron[word_dict.keys()[i]] = {
+            'r' : p[i][0][0],
+            'c' : p[i][0][1],
+            'd' : p[i][1],
+        }
+
+    if word_dict.valid():
+        return word_dict
+    else:
+        return None
+        
 class NaiveMethod(BaseMethod):
     def produce(self, word_dict):
         """ Using my key, value pairs, form a crossword puzzle
@@ -29,23 +42,14 @@ class NaiveMethod(BaseMethod):
         print "testing them"
         scoreboard = {}
 
-        def form_it(p):
-            for i in range(len(word_dict.keys())):
-                word_dict._voltron[word_dict.keys()[i]] = {
-                    'r' : p[i][0][0],
-                    'c' : p[i][0][1],
-                    'd' : p[i][1],
-                }
-
-            if word_dict.valid():
-                count = word_dict.count_letters()
-                if count not in scoreboard:
-                    print "New one...", count
-                    print word_dict 
-                scoreboard[count] = scoreboard.get(count, 0) + 1
-
         for p in every_possible:
-            form_it(p)
+            dct = form_it(p, word_dict)
+            if dct and dct.count_letters() not in scoreboard:
+                print "New one...", dct.count_letters()
+                print word_dict 
+            if dct:
+                scoreboard[dct.count_letters()] = \
+                        scoreboard.get(dct.count_letters(), 0) + 1
 
         print "Scoreboard is..."
         pprint.pprint(scoreboard)
