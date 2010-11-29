@@ -181,12 +181,14 @@ class Puzzle(dict):
 if __name__ == '__main__':
 #    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
 #    words = ['foo', 'far', 'bar']
-    _words = [
-        'dog',
-        'dietpepsi', 'rr', 'ido', 'ti', 'eve', 'step', 'ja', 'janet', 'bigboi',
-        'serena', 'scoutt', 'toni', 'dr', 'orb']
-    for i in range(1, len(_words)):
-        words = _words[:i]
+    #_words = [
+    #    'dog',
+    #    'dietpepsi', 'rr', 'ido', 'ti', 'eve', 'step', 'ja', 'janet', 'bigboi',
+    #    'serena', 'scoutt', 'toni', 'dr', 'orb']
+    #for i in range(1, len(_words)):
+    #    words = _words[:i]
+        words = ['rr', 'dietpepsi', 'eve', 'dog', 'ido', 'step', 'ti']
+        words = ['rr', 'dietpepsi', 'dog', 'eve', 'ido', 'ti']
         d = dict([(w, '') for w in words])
         p = Puzzle(method=HeuristicMethod(), **d)
         print "Done"

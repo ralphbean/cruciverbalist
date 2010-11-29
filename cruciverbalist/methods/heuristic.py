@@ -8,7 +8,7 @@ from naive import form_it
 
 
 class HeuristicMethod(BaseMethod):
-    def good_guess(self, dct, working_p=[]):
+    def good_guess(self, dct, working_p=[], depth=0):
         """ Recursive """
         if len(dct.keys()) == len(working_p):
             return [working_p]
@@ -23,16 +23,16 @@ class HeuristicMethod(BaseMethod):
                 ri, ci = [dct.grid_center()]*2
                 entries = [[(ri, ci), 'across'], [(ri, ci), 'down']]
                 for entry in entries:
-                    possibs.extend( self.good_guess(dct, working_p + [entry]) )
+                    possibs.extend(
+                        self.good_guess(dct, working_p + [entry], depth+1) )
                 return possibs
 
             word = dct.keys()[len(working_p)]
             r = working_p[-1][0][0]
             c = working_p[-1][0][1]
-            c += len(word) + 1
-            r += len(word) + 1
+            c += (len(dct.keys()[len(working_p)-1]) + 1) * 2
             entry = [(r, c), 'across']
-            possibs.extend( self.good_guess(dct, working_p + [entry]) )
+            possibs.extend( self.good_guess(dct, working_p + [entry], depth+1) )
 
             # Look through all the already placed words.
             for i in range(len(working_p)):
@@ -47,7 +47,7 @@ class HeuristicMethod(BaseMethod):
                             else:
                                 entry = [ (ri - k, ci + j), 'down']
                             possibs.extend( 
-                                self.good_guess(dct, working_p + [entry]) )
+                                self.good_guess(dct, working_p + [entry], depth+1) )
             return possibs
 
 
@@ -81,7 +81,6 @@ class HeuristicMethod(BaseMethod):
         print "    Done measuring."
         if not best:
             print "BEST WAS NEVER SET... weird"
-            pprint.pprint(possibs)
             raise ValueError, "WTF"
         return form_it(best, word_dict)
 
