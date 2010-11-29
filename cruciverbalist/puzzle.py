@@ -145,9 +145,15 @@ class Puzzle(dict):
         return res
 
 
-    def build_grid(self):
+    def grid_center(self):
+        return self.grid_size() / 2
+
+    def grid_size(self):
         n = len(self.keys())
-        size = max(n * 2, max(map(lambda x : len(x), self.keys()))) * 2
+        return max(n * 2, max(map(lambda x : len(x), self.keys()))) * 2 * 2
+
+    def build_grid(self):
+        size = self.grid_size()
         grid = [[self.F for j in range(size)] for i in range(size)]
         for word, config in self._voltron.iteritems():
             for i in range(len(word)):
@@ -167,7 +173,7 @@ class Puzzle(dict):
 
 if __name__ == '__main__':
 #    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
-    words = ['foo', 'far']
+    words = ['foo', 'far', 'bar']
     d = dict([(w, '') for w in words])
     p = Puzzle(method=HeuristicMethod(), **d)
     print "Done"
