@@ -2,6 +2,7 @@
 
 from methods import NaiveMethod
 from methods import GeneticMethod
+from methods import HeuristicMethod
 
 class InvalidPuzzleException(Exception):
         pass
@@ -165,10 +166,10 @@ class Puzzle(dict):
         return grid
 
 if __name__ == '__main__':
-    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
-#    words = ['foo', 'far']
+#    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
+    words = ['foo', 'far']
     d = dict([(w, '') for w in words])
-    p = Puzzle(method=GeneticMethod(), **d)
+    p = Puzzle(method=HeuristicMethod(), **d)
     print "Done"
     print p
 
