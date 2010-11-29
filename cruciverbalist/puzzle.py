@@ -16,8 +16,8 @@ class Puzzle(dict):
         super(Puzzle, self).__init__(**kwargs)
         print type(method)
         self = method.produce(self)
- 
-    def squared_size(self):
+
+    def bounds(self):
         grid = self.build_grid()
         maxR, maxC, minR, minC = 0, 0, 1000000, 1000000
         for r in range(len(grid)):
@@ -32,7 +32,10 @@ class Puzzle(dict):
                         minR = r
                     if c < minC:
                         minC = c
+        return maxR, minR, maxC, minC 
 
+    def squared_size(self):
+        maxR, minR, maxC, minC = self.bounds()
         return max([maxR-minR, maxC-minC])
 
     def count_letters(self):
@@ -140,10 +143,10 @@ class Puzzle(dict):
         # Otherwise...
         grid = self.build_grid()
         res = ''
-        # TODO -- trim grid down as far as we can
-        for row in grid:
-            for ch in row:
-                res += ch
+        maxR, minR, maxC, minC = self.bounds()
+        for r in range(minR-1, maxR+2):
+            for c in range(minC-1, maxC+2):
+                res += grid[r][c]
             res += '\n'
         return res
 
