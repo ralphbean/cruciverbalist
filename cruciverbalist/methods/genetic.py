@@ -1,6 +1,7 @@
 
 import itertools
 import pprint
+import sys
 from random import randint, random
 
 from core import BaseMethod
@@ -101,7 +102,7 @@ class GeneticMethod(BaseMethod):
             #'line up word' : line_up_word,
             #'line up connected block' : line_up_connected,
         }
-        mutation_rate = 0.12
+        mutation_rate = 0.05
         if random() < mutation_rate:
             method_i = randint(0, len(methods.keys())-1)
             org = methods[methods.keys()[method_i]](org)
@@ -149,14 +150,17 @@ class GeneticMethod(BaseMethod):
         for gen in range(generations):
             if population[0][-1] < best_score:
                 best_score = population[0][-1]
+                print
                 print "New best score", best_score, "at gen", gen
                 winner = form_it(population[0][:-1], word_dict)
                 print "Winner is:"
                 print winner
+                print
 
-            #if gen % 100 == 0:
-            #    avg = sum([org[-1] for org in population]) / float(len(population))
-            #    print "     Avg score", avg
+            if gen % 100 == 0:
+                avg = sum([org[-1] for org in population]) / float(len(population))
+                print "\r     ", gen, "Avg score", avg,
+                sys.stdout.flush()
 
             org1, org2 = self.select(population)
             chi1, chi2 = self.crossover(org1, org2)
