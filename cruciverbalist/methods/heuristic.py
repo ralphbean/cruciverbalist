@@ -1,6 +1,7 @@
 
 import itertools
 import pprint
+import sys
 
 from core import BaseMethod
 from naive import form_it
@@ -46,7 +47,6 @@ class HeuristicMethod(BaseMethod):
                                 entry = [ (ri - k, ci + j), 'down']
                             possibs.extend( 
                                 self.good_guess(dct, working_p + [entry]) )
-
             return possibs
 
 
@@ -55,16 +55,29 @@ class HeuristicMethod(BaseMethod):
 
         Method must be a str and may be 'naive', 'hard' or 'genetic
         """
-        
-        possibilities = self.good_guess(word_dict)
+       
+        print "Developing a number of guesses..."
+        possibs = self.good_guess(word_dict)
+        print "    Done guessing.  %i reasonable possibilities." % len(possibs)
         best_score = 100000
         best = None
-        for p in possibilities:
+        print "Measuring the 'goodness' of each guess..."
+        for i in range(len(possibs)):
+            if i % 100 == 0:
+                prog = (float(i)/len(possibs))
+                print "\r    %%%.1f" % (100 * prog),
+                bar_len = 65
+                print "[", "=" * int(prog*bar_len),
+                print " " * int((1-prog)*bar_len), "]",
+                sys.stdout.flush()
+            p = possibs[i]
             d = form_it(p, word_dict)
             if d:
                 if d.score() < best_score:
                     best = p
                     best_score = d.score()
+        print 
+        print "    Done measuring."
         return form_it(best, word_dict)
 
 

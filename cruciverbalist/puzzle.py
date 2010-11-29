@@ -13,6 +13,7 @@ class Puzzle(dict):
         self._voltron = {}
         self.F = '#'
 
+        print "Working with words:", kwargs.keys()
         super(Puzzle, self).__init__(**kwargs)
         print type(method)
         self = method.produce(self)
@@ -178,10 +179,16 @@ class Puzzle(dict):
         return grid
 
 if __name__ == '__main__':
-    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
+#    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
 #    words = ['foo', 'far', 'bar']
-    d = dict([(w, '') for w in words])
-    p = Puzzle(method=HeuristicMethod(), **d)
-    print "Done"
-    print p
+    _words = [
+        'dog',
+        'dietpepsi', 'rr', 'ido', 'ti', 'eve', 'step', 'ja', 'janet', 'bigboi',
+        'serena', 'scoutt', 'toni', 'dr', 'orb']
+    for i in range(1, len(_words)):
+        words = _words[:i]
+        d = dict([(w, '') for w in words])
+        p = Puzzle(method=HeuristicMethod(), **d)
+        print "Done"
+        print p
 
