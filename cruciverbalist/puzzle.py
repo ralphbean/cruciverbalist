@@ -15,7 +15,25 @@ class Puzzle(dict):
         super(Puzzle, self).__init__(**kwargs)
         print type(method)
         self = method.produce(self)
-  
+ 
+    def squared_size(self):
+        grid = self.build_grid()
+        maxR, maxC, minR, minC = 0, 0, 1000000, 1000000
+        for r in range(len(grid)):
+            for c in range(len(grid[r])):
+                ch = grid[r][c]
+                if ch != self.F:
+                    if r > maxR:
+                        maxR = r
+                    if c > maxC:
+                        maxC = c
+                    if r < minR:
+                        minR = r
+                    if c < minC:
+                        minC = c
+
+        return max([maxR-minR, maxC-minC])
+
     def count_letters(self):
         grid = self.build_grid()
         count = 0
@@ -61,7 +79,7 @@ class Puzzle(dict):
                             self._voltron[k]['d'] == 'across'):
                         continue
                     word = k
-               
+                
                 # make sure i'm isolated if I'm isolated
                 if not word and grid[r][_c+1] != self.F:
                     return False
@@ -108,6 +126,8 @@ class Puzzle(dict):
                     if (len(grid[_r]) > r + len(word) and
                         grid[_r+len(word)][c] != self.F):
                         return False
+        except IndexError:
+            return False
         except InvalidPuzzleException:
             return False
         return True
@@ -145,8 +165,8 @@ class Puzzle(dict):
         return grid
 
 if __name__ == '__main__':
-#    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
-    words = ['foo', 'far']
+    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
+#    words = ['foo', 'far']
     d = dict([(w, '') for w in words])
     p = Puzzle(method=GeneticMethod(), **d)
     print "Done"

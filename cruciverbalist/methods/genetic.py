@@ -26,21 +26,28 @@ class GeneticMethod(BaseMethod):
     def fitness(self, org):
         d = form_it(org, self.word_dict)
         if d and d.valid():
-            return d.count_letters()
+            return d.count_letters() + d.squared_size()
         else:
             return 10000
 
     def select(self, pop):
-        return pop[:2]
+        ind = [randint(0, len(pop)-1) for i in range(2)]
+        return [pop[i] for i in ind]
+
     def introduce(self, pop, chi1, chi2):
-        pop = pop[:-2]
-        pop.extend([chi1, chi2])
+        r1 = r2 = randint(len(pop)/2, len(pop)-1)
+        while r2 == r1:
+            r2 = randint(len(pop)/2, len(pop)-1)
+        pop[r1] = chi1
+        pop[r2] = chi2
         return pop
 
     def mutate(self, org):
-        mutation_rate = 0.3
-        if random() < mutation_rate:
-            print "MUTATING"
+        # TODO -- more operators:
+            # move whole blocks
+            # rotate whole blocks
+            # line up word?
+        def random_mut(org):
             i = randint(0, len(org)-2)
             j = randint(0,2)
             if j == 0:
@@ -52,11 +59,62 @@ class GeneticMethod(BaseMethod):
                     org[i] = (org[i][0], 'across')
                 else:
                     org[i] = (org[i][0], 'down')
+            return org
+        def move_block(org):
+            i1 = i2 = randint(0, len(org)-2)
+            while i2 == i1:
+                i2 = randint(0, len(org)-2)
+            if i2 < i1:
+                tmp = i2
+                i2 = i1
+                i1 = tmp
+
+            choice = randint(0, 3)
+            for i in range(i1, i2+1):
+                if choice == 0:
+                    org[i][0][0] = org[i][0][0] - 1
+                elif choice == 1:
+                    org[i][0][0] = org[i][0][0] + 1
+                elif choice == 2:
+                    org[i][0][1] = org[i][0][1] - 1
+                elif choice == 3:
+                    org[i][0][1] = org[i][0][1] + 1
+                else:
+                    raise ValueError, "WTF"
+            return org
+        def move_connected(org):
+            return org
+        def rotate_block(org):
+            return org
+        def rotate_connected(org):
+            return org
+        def line_up_word(org):
+            return org
+        def line_up_connected(org):
+            return org
+        methods = {
+            'random mutate' : random_mut,
+            'move block' : move_block,
+            #'move connected block' : move_connected,
+            #'rotate block' : rotate_block,
+            #'rotate connected block' : rotate_connected,
+            #'line up word' : line_up_word,
+            #'line up connected block' : line_up_connected,
+        }
+        mutation_rate = 0.12
+        if random() < mutation_rate:
+            method_i = randint(0, len(methods.keys())-1)
+            org = methods[methods.keys()[method_i]](org)
+        return org
+
         return org
 
     def crossover(self, org1, org2):
-        return org1, org2
-        
+        pt = randint(0, len(org1)-2)
+        return (
+            org1[:pt] + org2[pt:-1] + [None],
+            org2[:pt] + org1[pt:-1] + [None],
+        )
 
     def produce(self, word_dict):
         """ Using my key, value pairs, form a crossword puzzle
@@ -76,8 +134,8 @@ class GeneticMethod(BaseMethod):
                 return ['down', 'across'][randint(0,1)]
             return ([randint(0, size), randint(0, size)], rand_dir())
 
-        generations = 100
-        pop_size = 6
+        generations = 100000
+        pop_size = 100
         population = [
             [random_spec() for j in range(n)]+[None] for i in range(pop_size)]
 
@@ -86,18 +144,30 @@ class GeneticMethod(BaseMethod):
         print "Initial population:"
         pprint.pprint(population)
 
+        best_score = population[0][-1]
+        print "Best score:", best_score
         for gen in range(generations):
+            if population[0][-1] < best_score:
+                best_score = population[0][-1]
+                print "New best score", best_score, "at gen", gen
+                winner = form_it(population[0][:-1], word_dict)
+                print "Winner is:"
+                print winner
+
+            #if gen % 100 == 0:
+            #    avg = sum([org[-1] for org in population]) / float(len(population))
+            #    print "     Avg score", avg
+
             org1, org2 = self.select(population)
             chi1, chi2 = self.crossover(org1, org2)
-            chi1 = self.mutate(chi1)
-            chi2 = self.mutate(chi2)
+            chi1 = self.evaluated(self.mutate(chi1))
+            chi2 = self.evaluated(self.mutate(chi2))
             population = self.introduce(population, chi1, chi2)
             population.sort(lambda x, y : cmp(x[-1], y[-1]))
-            print "Population after generation", gen
-            pprint.pprint(population)
+            #print "Population after generation", gen
+            #pprint.pprint(population)
 
         winner = form_it(population[0][:-1], word_dict)
-
         print "Winner is:"
         pprint.pprint(winner)
 
