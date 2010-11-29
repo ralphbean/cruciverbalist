@@ -30,6 +30,7 @@ class HeuristicMethod(BaseMethod):
             r = working_p[-1][0][0]
             c = working_p[-1][0][1]
             c += len(word) + 1
+            r += len(word) + 1
             entry = [(r, c), 'across']
             possibs.extend( self.good_guess(dct, working_p + [entry]) )
 
@@ -78,6 +79,10 @@ class HeuristicMethod(BaseMethod):
                     best_score = d.score()
         print 
         print "    Done measuring."
+        if not best:
+            print "BEST WAS NEVER SET... weird"
+            pprint.pprint(possibs)
+            raise ValueError, "WTF"
         return form_it(best, word_dict)
 
 
