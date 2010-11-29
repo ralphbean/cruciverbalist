@@ -44,6 +44,9 @@ class Puzzle(dict):
                     count += 1
         return count
 
+    def score(self):
+        return self.count_letters() + self.squared_size()
+
     def valid(self):
         try:
             grid = self.build_grid()
@@ -172,8 +175,8 @@ class Puzzle(dict):
         return grid
 
 if __name__ == '__main__':
-#    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
-    words = ['foo', 'far', 'bar']
+    words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
+#    words = ['foo', 'far', 'bar']
     d = dict([(w, '') for w in words])
     p = Puzzle(method=HeuristicMethod(), **d)
     print "Done"

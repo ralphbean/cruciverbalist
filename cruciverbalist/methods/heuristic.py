@@ -59,24 +59,14 @@ class HeuristicMethod(BaseMethod):
         """
         
         possibilities = self.good_guess(word_dict)
+        best_score = 100000
+        best = None
         for p in possibilities:
-            print p
-            dct = form_it(p, word_dict)
-            print dct
-        sys.exit(0)
+            d = form_it(p, word_dict)
+            if d:
+                if d.score() < best_score:
+                    best = p
+                    best_score = d.score()
+        return form_it(best, word_dict)
 
-        for p in possibilities:
-            dct = form_it(p, word_dict)
-            if dct and dct.count_letters() not in scoreboard:
-                print "New one...", dct.count_letters()
-                print word_dict 
-            if dct:
-                scoreboard[dct.count_letters()] = \
-                        scoreboard.get(dct.count_letters(), 0) + 1
-
-        print "Scoreboard is..."
-        pprint.pprint(scoreboard)
-
-        self._formed = True
-        return word_dict
 
