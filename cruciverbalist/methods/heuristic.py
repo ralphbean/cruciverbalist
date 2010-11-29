@@ -38,8 +38,6 @@ class HeuristicMethod(BaseMethod):
                 for j in range(len(dct.keys()[i])):
                     for k in range(len(word)):
                         if dct.keys()[i][j] == word[k]:
-                            print dct.keys()[i][j], "matches", word[k]
-                            print " for", dct.keys()[i], "and", word
                             ri, ci = working_p[i][0]
                             entry = []
                             if working_p[i][1] == 'down':
