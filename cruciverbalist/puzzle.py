@@ -189,7 +189,9 @@ if __name__ == '__main__':
     for i in range(1, len(_words)):
         words = _words[:i]
         d = dict([(w, '') for w in words])
-        p = Puzzle(method=HeuristicMethod(), **d)
-        print "Done"
-        print p
+        #p = Puzzle(method=HeuristicMethod(), **d)
+        #print "Done"
+        #print p
+        import cProfile
+        cProfile.run('Puzzle(method=HeuristicMethod(), **%s)' % str(d), '%i.prof' % i)
 

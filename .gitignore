@@ -8,3 +8,4 @@ tw2*
 virtualenv-apply
 devdata.db*
 *.egg*
+*.prof
