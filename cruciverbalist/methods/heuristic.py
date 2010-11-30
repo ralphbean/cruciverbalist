@@ -4,10 +4,24 @@ import pprint
 import sys
 
 from core import BaseMethod
-from naive import form_it
 
+def unordered_form_it(p, word_dict):
+    for i in range(len(p)):
+        word_dict._voltron[p[i][2]] = {
+            'r' : p[i][0][0],
+            'c' : p[i][0][1],
+            'd' : p[i][1],
+        }
+
+    if word_dict.valid():
+        return word_dict
+    else:
+        return None
 
 class HeuristicMethod(BaseMethod):
+    def unchosen_words(self, dct, working_p):
+        return [k for k in dct.keys() if k not in [ele[2] for ele in working_p]]
+
     def good_guess(self, dct, working_p=[], depth=0):
         """ Recursive """
         if len(dct.keys()) == len(working_p):
@@ -25,35 +39,35 @@ class HeuristicMethod(BaseMethod):
         
         # try placing it on its own across (naive)
         if len(working_p) == 0:
-            ri, ci = [dct.grid_center()]*2
-            entries = [[(ri, ci), 'across'], [(ri, ci), 'down']]
-            for entry in entries:
-                possibs.extend(
-                    self.good_guess(dct, working_p + [entry], depth+1) )
+            for word in self.unchosen_words(dct, working_p):
+                ri, ci = [dct.grid_center()]*2
+                entries = [[(ri, ci),'across',word], [(ri, ci),'down',word]]
+                for entry in entries:
+                    possibs.extend(
+                        self.good_guess(dct, working_p + [entry], depth+1) )
             return possibs
 
-        word = dct.keys()[len(working_p)]
-        r = working_p[-1][0][0]
-        c = working_p[-1][0][1]
-        c += (len(dct.keys()[len(working_p)-1]) + 1) * 2
-        entry = [(r, c), 'across']
-        possibs.extend( self.good_guess(dct, working_p + [entry], depth+1) )
+        for word in self.unchosen_words(dct, working_p):
+            r = working_p[-1][0][0]
+            c = working_p[-1][0][1]
+            c += (len(working_p[-1][2]) + 1) * 2
+            entry = [(r, c), 'across', word]
+            possibs.extend( self.good_guess(dct, working_p + [entry], depth+1) )
 
-        # Look through all the already placed words.
-        for i in range(len(working_p)):
-            # for every placed that `word` fits, try it
-            for j in range(len(dct.keys()[i])):
-                for k in range(len(word)):
-                    if dct.keys()[i][j] == word[k]:
-                        ri, ci = working_p[i][0]
-                        entry = []
-                        if working_p[i][1] == 'down':
-                            entry = [ (ri + j, ci - k), 'across']
-                        else:
-                            entry = [ (ri - k, ci + j), 'down']
-                        possibs.extend( 
-                            self.good_guess(
-                                dct, working_p + [entry], depth+1) )
+            # Look through all the already placed words.
+            for i in range(len(working_p)):
+                # for every placed that `word` fits, try it
+                for j in range(len(working_p[i][2])):
+                    for k in range(len(word)):
+                        if working_p[i][2][j] == word[k]:
+                            ri, ci = working_p[i][0]
+                            entry = []
+                            if working_p[i][1] == 'down':
+                                entry = [ (ri + j, ci - k), 'across', word]
+                            else:
+                                entry = [ (ri - k, ci + j), 'down', word]
+                            possibs.extend( 
+                                self.good_guess(dct,working_p+[entry],depth+1))
         return possibs
 
 
@@ -78,7 +92,7 @@ class HeuristicMethod(BaseMethod):
                 print " " * int((1-prog)*bar_len), "]",
                 sys.stdout.flush()
             p = possibs[i]
-            d = form_it(p, word_dict)
+            d = unordered_form_it(p, word_dict)
             if d:
                 if d.score() < best_score:
                     best = p
@@ -88,6 +102,6 @@ class HeuristicMethod(BaseMethod):
         if not best:
             print "BEST WAS NEVER SET... weird"
             raise ValueError, "WTF"
-        return form_it(best, word_dict)
+        return unordered_form_it(best, word_dict)
 
 
