@@ -38,14 +38,12 @@ class HeuristicMethod(BaseMethod):
         # try placing it anywhere it will fit across
         # try placing it anywhere it will fit down
         
-        # try placing it on its own across (naive)
         if len(working_p) == 0:
+            # Top of the tree....
             for word in self.unchosen_words(dct, working_p):
                 ri, ci = [dct.grid_center()]*2
-                entries = [[(ri,ci),'across',word,[]],[(ri,ci),'down',word,[]]]
-                for entry in entries:
-                    possibs.extend(
-                        self.good_guess(dct, working_p + [entry], depth+1) )
+                entry = [(ri,ci),'across',word,[]]
+                possibs.extend(self.good_guess(dct,working_p+[entry],depth+1))
             return possibs
 
         for word in self.unchosen_words(dct, working_p):
