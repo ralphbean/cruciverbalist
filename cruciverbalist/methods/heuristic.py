@@ -30,7 +30,8 @@ class HeuristicMethod(BaseMethod):
         # Sanity check for converting to unordered heuristic
         if len(working_p) > 0:
             for p in working_p:
-                assert(len(p) == 3)
+                if not len(p) >= 3:
+                    raise ValueError, "Invalid p len %i %s" % (len(p), str(p))
 
         possibs = []
         # try placing it on its own across (naive)
@@ -41,7 +42,7 @@ class HeuristicMethod(BaseMethod):
         if len(working_p) == 0:
             for word in self.unchosen_words(dct, working_p):
                 ri, ci = [dct.grid_center()]*2
-                entries = [[(ri, ci),'across',word], [(ri, ci),'down',word]]
+                entries = [[(ri,ci),'across',word,[]],[(ri,ci),'down',word,[]]]
                 for entry in entries:
                     possibs.extend(
                         self.good_guess(dct, working_p + [entry], depth+1) )
@@ -51,7 +52,7 @@ class HeuristicMethod(BaseMethod):
             r = working_p[-1][0][0]
             c = working_p[-1][0][1]
             c += (len(working_p[-1][2]) + 1) * 2
-            entry = [(r, c), 'across', word]
+            entry = [(r, c), 'across', word, []]
             possibs.extend( self.good_guess(dct, working_p + [entry], depth+1) )
 
             # Look through all the already placed words.
@@ -59,15 +60,24 @@ class HeuristicMethod(BaseMethod):
                 # for every placed that `word` fits, try it
                 for j in range(len(working_p[i][2])):
                     for k in range(len(word)):
-                        if working_p[i][2][j] == word[k]:
+                        if ( working_p[i][2][j] == word[k] and
+                             not j in working_p[i][3] ):
                             ri, ci = working_p[i][0]
                             entry = []
                             if working_p[i][1] == 'down':
-                                entry = [ (ri + j, ci - k), 'across', word]
+                                entry = [ (ri + j, ci - k), 'across', word, [k]]
                             else:
-                                entry = [ (ri - k, ci + j), 'down', word]
-                            possibs.extend( 
-                                self.good_guess(dct,working_p+[entry],depth+1))
+                                entry = [ (ri - k, ci + j), 'down', word, [k]]
+                            possibs.extend(
+                                self.good_guess(
+                                    dct, working_p[:i]+[
+                                        [
+                                            working_p[i][0],
+                                            working_p[i][1],
+                                            working_p[i][2],
+                                            working_p[i][3] + [j]
+                                        ]
+                                    ]+working_p[i+1:] + [entry], depth+1))
         return possibs
 
 
