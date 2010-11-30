@@ -12,6 +12,12 @@ class HeuristicMethod(BaseMethod):
         """ Recursive """
         if len(dct.keys()) == len(working_p):
             return [working_p]
+
+        # Sanity check for converting to unordered heuristic
+        if len(working_p) > 0:
+            for p in working_p:
+                assert(len(p) == 3)
+
         possibs = []
         # try placing it on its own across (naive)
         # try placing it anywhere it will fit across
