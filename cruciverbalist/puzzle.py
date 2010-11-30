@@ -18,6 +18,9 @@ class Puzzle(dict):
         print type(method)
         self = method.produce(self)
 
+    def id(self):
+        return self.method.id
+
     def bounds(self):
         grid = self.build_grid()
         maxR, maxC, minR, minC = 0, 0, 1000000, 1000000
