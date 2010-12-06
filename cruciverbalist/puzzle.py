@@ -184,7 +184,7 @@ class Puzzle(dict):
 if __name__ == '__main__':
     _words = [
         'dog',
-        'dietpepsi', 'rr', 'ido', 'ti', 'eve', 'step', 'ja', 'janet', 'bigboi',
+        'dietpepsi', 'ido', 'ti', 'eve', 'step', 'ja', 'janet', 'bigboi',
         'serena', 'scoutt', 'toni', 'dr', 'orb']
     for i in range(1, len(_words)):
         words = _words[:i]
