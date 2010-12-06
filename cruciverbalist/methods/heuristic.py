@@ -43,19 +43,10 @@ class HeuristicMethod(BaseMethod):
         
         if len(working_p) == 0:
             # Top of the tree....
-            for word in self.unchosen_words(dct, working_p):
-                print "Top of tree.  Starting with word '%s'" % word
-                ri, ci = [dct.grid_center()]*2
-                entry = [(ri,ci),'across',word,[]]
-                subtree = self.good_guess(dct,working_p+[entry],depth+1)
-                possibs.extend(subtree)
-                print "    Subtree of size:  %i" % len(subtree)
-                filename = "%s/%s-%s.possibs.dat" % (PREFIX,  self.id, word)
-                print "    Writing subtree to %s" % filename
-                d = shelve.open(filename)
-                d['data'] = subtree
-                d.close()
-                print "    Done."
+            word = self.unchosen_words(dct, working_p)[0]
+            ri, ci = [dct.grid_center()]*2
+            entry = [(ri,ci),'across',word,[]]
+            possibs.extend(self.good_guess(dct,working_p+[entry],depth+1))
             return possibs
 
         for word in self.unchosen_words(dct, working_p):
