@@ -21,64 +21,63 @@ def unordered_form_it(p, word_dict):
     else:
         return None
 
-class HeuristicMethod(BaseMethod):
-    def unchosen_words(self, dct, working_p):
-        return [k for k in dct.keys() if k not in [ele[2] for ele in working_p]]
+def unchosen_words(dct, working_p):
+    return [k for k in dct.keys() if k not in [ele[2] for ele in working_p]]
 
-    def good_guess(self, dct, working_p=[], depth=0):
-        """ Recursive """
-        if len(dct.keys()) == len(working_p):
-            return [working_p]
+def good_guess(dct, working_p=[], depth=0):
+    """ Recursive """
+    if len(dct.keys()) == len(working_p):
+        return [working_p]
 
-        # Sanity check for converting to unordered heuristic
-        if len(working_p) > 0:
-            for p in working_p:
-                if not len(p) >= 3:
-                    raise ValueError, "Invalid p len %i %s" % (len(p), str(p))
+    # Sanity check for converting to unordered heuristic
+    if len(working_p) > 0:
+        for p in working_p:
+            if not len(p) >= 3:
+                raise ValueError, "Invalid p len %i %s" % (len(p), str(p))
 
-        possibs = []
-        # try placing it on its own across (naive)
-        # try placing it anywhere it will fit across
-        # try placing it anywhere it will fit down
-        
-        if len(working_p) == 0:
-            # Top of the tree....
-            word = self.unchosen_words(dct, working_p)[0]
-            ri, ci = [dct.grid_center()]*2
-            entry = [(ri,ci),'across',word,[]]
-            possibs.extend(self.good_guess(dct,working_p+[entry],depth+1))
-            return possibs
-
-        targets = []
-        for word in self.unchosen_words(dct, working_p):
-            # Look through all the already placed words.
-            for i in range(len(working_p)):
-                # for every placed that `word` fits, try it
-                for j in range(len(working_p[i][2])):
-                    for k in range(len(word)):
-                        if ( working_p[i][2][j] == word[k] and
-                             not j in working_p[i][3] ):
-                            ri, ci = working_p[i][0]
-                            entry = []
-                            if working_p[i][1] == 'down':
-                                entry = [ (ri + j, ci - k), 'across', word, [k]]
-                            else:
-                                entry = [ (ri - k, ci + j), 'down', word, [k]]
-                            targets.append(
-                                    working_p[:i]+[
-                                        [
-                                            working_p[i][0],
-                                            working_p[i][1],
-                                            working_p[i][2],
-                                            working_p[i][3] + [j]
-                                        ]
-                                    ]+working_p[i+1:] + [entry])
-
-        for target in targets:
-            possibs.extend(self.good_guess(dct, target, depth+1))
+    possibs = []
+    # try placing it on its own across (naive)
+    # try placing it anywhere it will fit across
+    # try placing it anywhere it will fit down
+    
+    if len(working_p) == 0:
+        # Top of the tree....
+        word = unchosen_words(dct, working_p)[0]
+        ri, ci = [dct.grid_center()]*2
+        entry = [(ri,ci),'across',word,[]]
+        possibs.extend(good_guess(dct,working_p+[entry],depth+1))
         return possibs
 
+    targets = []
+    for word in unchosen_words(dct, working_p):
+        # Look through all the already placed words.
+        for i in range(len(working_p)):
+            # for every placed that `word` fits, try it
+            for j in range(len(working_p[i][2])):
+                for k in range(len(word)):
+                    if ( working_p[i][2][j] == word[k] and
+                         not j in working_p[i][3] ):
+                        ri, ci = working_p[i][0]
+                        entry = []
+                        if working_p[i][1] == 'down':
+                            entry = [ (ri + j, ci - k), 'across', word, [k]]
+                        else:
+                            entry = [ (ri - k, ci + j), 'down', word, [k]]
+                        targets.append(
+                                working_p[:i]+[
+                                    [
+                                        working_p[i][0],
+                                        working_p[i][1],
+                                        working_p[i][2],
+                                        working_p[i][3] + [j]
+                                    ]
+                                ]+working_p[i+1:] + [entry])
 
+    for target in targets:
+        possibs.extend(good_guess(dct, target, depth+1))
+    return possibs
+
+class HeuristicMethod(BaseMethod):
     def produce(self, word_dict):
         """ Using my key, value pairs, form a crossword puzzle
 
@@ -86,7 +85,7 @@ class HeuristicMethod(BaseMethod):
         """
        
         print "Developing a number of guesses..."
-        possibs = self.good_guess(word_dict)
+        possibs = good_guess(word_dict)
         print "    Done guessing.  %i reasonable possibilities." % len(possibs)
         best_score = 100000
         best = None
