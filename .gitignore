@@ -9,3 +9,4 @@ virtualenv-apply
 devdata.db*
 *.egg*
 *.prof
+data

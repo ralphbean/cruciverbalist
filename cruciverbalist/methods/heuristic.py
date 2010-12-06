@@ -4,7 +4,7 @@ import pprint
 import sys
 
 import shelve
-PREFIX = "/tmp"
+PREFIX = "data"
 
 from core import BaseMethod
 
