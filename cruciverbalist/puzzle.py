@@ -191,6 +191,14 @@ if __name__ == '__main__':
     _words = ['abcde', 'fghij', 'klmno', 'pqrst', 'afkp', 'bglq', 'chmr', 'dins', 'ejot'] 
 
 
+    print "*"*79
+    print "Ten million candidates is too many."
+    print 
+    print "By this one I can see I need to drastically prune the tree."
+    print "Consider building the grid while defining 'good guesses'..."
+    print "This way I can check for stupid partial solutions and prune their"
+    print "subtrees earlier.... kind of like dynamic programming."
+    print "*"*79
     #for i in range(1, len(_words)+1):
     for i in [len(_words)]:
         words = _words[:i]
