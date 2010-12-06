@@ -7,8 +7,6 @@ import shelve
 PREFIX = "data"
 
 from core import BaseMethod
-import multiprocessing as mp
-pool = mp.Pool(4)
 
 flatten = lambda l : [item for sublist in l for item in sublist]
 
@@ -78,8 +76,13 @@ def good_guess(working_p=[]):
                                         working_p[i][3] + [j]
                                     ]
                                 ]+working_p[i+1:] + [entry])
-
+    
     possibs.extend(flatten(map(good_guess, targets)))
+    if len(working_p) == 2:
+        print len(possibs), "possibs for", [p[2] for p in working_p]
+        print len(targets), "targets for", [p[2] for p in working_p]
+        for t in targets:
+            print "    ", t
     return possibs
 
 class HeuristicMethod(BaseMethod):
@@ -117,6 +120,7 @@ class HeuristicMethod(BaseMethod):
             print "BEST WAS NEVER SET... weird"
             return best
         print "Best is:", best
+        print "Score is:", best_score
         return unordered_form_it(best, word_dict)
 
 

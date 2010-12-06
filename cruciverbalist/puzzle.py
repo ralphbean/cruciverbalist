@@ -40,7 +40,7 @@ class Puzzle(dict):
 
     def squared_size(self):
         maxR, minR, maxC, minC = self.bounds()
-        return max([maxR-minR, maxC-minC])
+        return max([maxR-minR, maxC-minC]) + 1
 
     def count_letters(self):
         grid = self.build_grid()
@@ -52,7 +52,7 @@ class Puzzle(dict):
         return count
 
     def score(self):
-        return self.count_letters() + self.squared_size()
+        return self.squared_size()
 
     def valid(self):
         try:
@@ -186,10 +186,18 @@ if __name__ == '__main__':
         'dog',
         'dietpepsi', 'ti', 'eve', 'step', 'janet', 'ja', 'bigboi',
         'serena', 'scoutt', 'toni', 'dr', 'orb']
-    for i in range(1, len(_words)):
+    _words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
+    _words = ['abc', 'def', 'ghi', 'adg', 'beh', 'cfi']
+    _words = ['abcde', 'fghij', 'klmno', 'pqrst', 'afkp', 'bglq', 'chmr', 'dins', 'ejot'] 
+
+
+    #for i in range(1, len(_words)+1):
+    for i in [len(_words)]:
         words = _words[:i]
         d = dict([(w, '') for w in words])
         p = Puzzle(method=HeuristicMethod(), **d)
         print "Done"
-        print p
+        if p.valid():
+            print p
+            print "Score is:", p.score()
 
