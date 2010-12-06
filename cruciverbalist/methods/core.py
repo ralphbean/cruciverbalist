@@ -4,7 +4,7 @@ class BaseMethod(object):
     def __init__(self, id=None):
         self.id = id
         if not self.id:
-            self.id = str(uuid.uuid4())
+            self.id = datetime.datetime.today().strftime('%F-%T')
         print "WORKING WITH UUID: %s" % self.id
 
     def produce(self, puzzle):
