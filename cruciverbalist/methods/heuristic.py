@@ -121,7 +121,7 @@ class HeuristicMethod(BaseMethod):
         print "    Done measuring."
         if not best:
             print "BEST WAS NEVER SET... weird"
-            raise ValueError, "WTF"
+            return best
         return unordered_form_it(best, word_dict)
 
 
