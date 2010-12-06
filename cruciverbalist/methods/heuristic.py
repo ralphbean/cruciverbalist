@@ -116,6 +116,7 @@ class HeuristicMethod(BaseMethod):
         if not best:
             print "BEST WAS NEVER SET... weird"
             return best
+        print "Best is:", best
         return unordered_form_it(best, word_dict)
 
 
