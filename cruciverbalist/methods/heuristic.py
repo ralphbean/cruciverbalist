@@ -7,6 +7,10 @@ import shelve
 PREFIX = "data"
 
 from core import BaseMethod
+import multiprocessing as mp
+pool = mp.Pool(4)
+
+flatten = lambda l : [item for sublist in l for item in sublist]
 
 def unordered_form_it(p, word_dict):
     for i in range(len(p)):
@@ -21,10 +25,12 @@ def unordered_form_it(p, word_dict):
     else:
         return None
 
-def unchosen_words(dct, working_p):
+dct = None
+
+def unchosen_words(working_p):
     return [k for k in dct.keys() if k not in [ele[2] for ele in working_p]]
 
-def good_guess(dct, working_p=[], depth=0):
+def good_guess(working_p=[]):
     """ Recursive """
     if len(dct.keys()) == len(working_p):
         return [working_p]
@@ -42,14 +48,14 @@ def good_guess(dct, working_p=[], depth=0):
     
     if len(working_p) == 0:
         # Top of the tree....
-        word = unchosen_words(dct, working_p)[0]
+        word = unchosen_words(working_p)[0]
         ri, ci = [dct.grid_center()]*2
         entry = [(ri,ci),'across',word,[]]
-        possibs.extend(good_guess(dct,working_p+[entry],depth+1))
+        possibs.extend(good_guess(working_p+[entry]))
         return possibs
 
     targets = []
-    for word in unchosen_words(dct, working_p):
+    for word in unchosen_words(working_p):
         # Look through all the already placed words.
         for i in range(len(working_p)):
             # for every placed that `word` fits, try it
@@ -73,8 +79,7 @@ def good_guess(dct, working_p=[], depth=0):
                                     ]
                                 ]+working_p[i+1:] + [entry])
 
-    for target in targets:
-        possibs.extend(good_guess(dct, target, depth+1))
+    possibs.extend(flatten(map(good_guess, targets)))
     return possibs
 
 class HeuristicMethod(BaseMethod):
@@ -85,7 +90,9 @@ class HeuristicMethod(BaseMethod):
         """
        
         print "Developing a number of guesses..."
-        possibs = good_guess(word_dict)
+        global dct
+        dct = word_dict
+        possibs = good_guess()
         print "    Done guessing.  %i reasonable possibilities." % len(possibs)
         best_score = 100000
         best = None
