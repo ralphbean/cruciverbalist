@@ -49,6 +49,7 @@ class HeuristicMethod(BaseMethod):
             possibs.extend(self.good_guess(dct,working_p+[entry],depth+1))
             return possibs
 
+        targets = []
         for word in self.unchosen_words(dct, working_p):
             # Look through all the already placed words.
             for i in range(len(working_p)):
@@ -63,16 +64,18 @@ class HeuristicMethod(BaseMethod):
                                 entry = [ (ri + j, ci - k), 'across', word, [k]]
                             else:
                                 entry = [ (ri - k, ci + j), 'down', word, [k]]
-                            possibs.extend(
-                                self.good_guess(
-                                    dct, working_p[:i]+[
+                            targets.append(
+                                    working_p[:i]+[
                                         [
                                             working_p[i][0],
                                             working_p[i][1],
                                             working_p[i][2],
                                             working_p[i][3] + [j]
                                         ]
-                                    ]+working_p[i+1:] + [entry], depth+1))
+                                    ]+working_p[i+1:] + [entry])
+
+        for target in targets:
+            possibs.extend(self.good_guess(dct, target, depth+1))
         return possibs
 
 

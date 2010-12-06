@@ -11,7 +11,7 @@ class Puzzle(dict):
     def __init__(self, method=NaiveMethod(), **kwargs):
         self._formed = False
         self._voltron = {}
-        self.F = '#'
+        self.F = ' '
 
         print "Working with words:", kwargs.keys()
         super(Puzzle, self).__init__(**kwargs)
