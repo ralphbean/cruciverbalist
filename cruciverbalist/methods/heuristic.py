@@ -59,12 +59,6 @@ class HeuristicMethod(BaseMethod):
             return possibs
 
         for word in self.unchosen_words(dct, working_p):
-            r = working_p[-1][0][0]
-            c = working_p[-1][0][1]
-            c += (len(working_p[-1][2]) + 1) * 2
-            entry = [(r, c), 'across', word, []]
-            possibs.extend( self.good_guess(dct, working_p + [entry], depth+1) )
-
             # Look through all the already placed words.
             for i in range(len(working_p)):
                 # for every placed that `word` fits, try it
