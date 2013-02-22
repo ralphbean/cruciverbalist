@@ -1,5 +1,5 @@
 venv-apply
-*.pyc
+*.py[oc]
 *.swp
 apply.egg-info
 ez_setup
