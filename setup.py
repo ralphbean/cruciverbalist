@@ -1,5 +1,7 @@
-from setuptools import setup, find_packages
-import sys, os
+from setuptools import setup
+import find_packages
+import sys
+import os
 
 version = '0.1'
 
@@ -8,7 +10,7 @@ setup(name='cruciverbalist',
       description="Generate crossword puzzles",
       long_description="""\
 Generate crossword puzzles""",
-      classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+      classifiers=[],
       keywords='',
       author='Ralph Bean',
       author_email='ralph.bean@gmail.com',
