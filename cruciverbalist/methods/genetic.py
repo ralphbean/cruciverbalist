@@ -18,7 +18,7 @@ def form_it(p, word_dict):
         return word_dict
     else:
         return None
-        
+
 class GeneticMethod(BaseMethod):
 
     def evaluated(self, org):
@@ -123,7 +123,7 @@ class GeneticMethod(BaseMethod):
         Method must be a str and may be 'naive', 'hard' or 'genetic
         """
         self.word_dict = word_dict
-        
+
         n = len(word_dict.keys())
         size = max(n * 2, max(map(lambda x : len(x), word_dict.keys())))
         self.size = size

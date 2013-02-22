@@ -16,14 +16,14 @@ def form_it(p, word_dict):
         return word_dict
     else:
         return None
-        
+
 class NaiveMethod(BaseMethod):
     def produce(self, word_dict):
         """ Using my key, value pairs, form a crossword puzzle
 
         Method must be a str and may be 'naive', 'hard' or 'genetic
         """
-        
+
         n = len(word_dict.keys())
         size = max(n * 2, max(map(lambda x : len(x), word_dict.keys())))
         print "size is", size
@@ -46,7 +46,7 @@ class NaiveMethod(BaseMethod):
             dct = form_it(p, word_dict)
             if dct and dct.count_letters() not in scoreboard:
                 print "New one...", dct.count_letters()
-                print word_dict 
+                print word_dict
             if dct:
                 scoreboard[dct.count_letters()] = \
                         scoreboard.get(dct.count_letters(), 0) + 1
