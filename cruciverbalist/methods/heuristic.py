@@ -43,7 +43,7 @@ def good_guess(working_p=[]):
     # try placing it on its own across (naive)
     # try placing it anywhere it will fit across
     # try placing it anywhere it will fit down
-    
+
     if len(working_p) == 0:
         # Top of the tree....
         word = unchosen_words(working_p)[0]
@@ -76,7 +76,7 @@ def good_guess(working_p=[]):
                                         working_p[i][3] + [j]
                                     ]
                                 ]+working_p[i+1:] + [entry])
-    
+
     possibs.extend(flatten(map(good_guess, targets)))
     if len(working_p) == 2:
         print len(possibs), "possibs for", [p[2] for p in working_p]
@@ -91,7 +91,7 @@ class HeuristicMethod(BaseMethod):
 
         Method must be a str and may be 'naive', 'hard' or 'genetic
         """
-       
+
         print "Developing a number of guesses..."
         global dct
         dct = word_dict
@@ -114,7 +114,7 @@ class HeuristicMethod(BaseMethod):
                 if d.score() < best_score:
                     best = p
                     best_score = d.score()
-        print 
+        print
         print "    Done measuring."
         if not best:
             print "BEST WAS NEVER SET... weird"

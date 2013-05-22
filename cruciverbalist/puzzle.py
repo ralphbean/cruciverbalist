@@ -36,7 +36,7 @@ class Puzzle(dict):
                         minR = r
                     if c < minC:
                         minC = c
-        return maxR, minR, maxC, minC 
+        return maxR, minR, maxC, minC
 
     def squared_size(self):
         maxR, minR, maxC, minC = self.bounds()
@@ -90,11 +90,11 @@ class Puzzle(dict):
                             self._voltron[k]['d'] == 'across'):
                         continue
                     word = k
-                
+
                 # make sure i'm isolated if I'm isolated
                 if not word and grid[r][_c+1] != self.F:
                     return False
-                
+
                 if word:
                     # otherwise.. scan right and verify
                     for i in range(len(word)):
@@ -188,12 +188,12 @@ if __name__ == '__main__':
         'serena', 'scoutt', 'toni', 'dr', 'orb']
     _words = ['hip', 'xei', 'sip', 'hxs', 'iei', 'pip']
     _words = ['abc', 'def', 'ghi', 'adg', 'beh', 'cfi']
-    _words = ['abcde', 'fghij', 'klmno', 'pqrst', 'afkp', 'bglq', 'chmr', 'dins', 'ejot'] 
+    _words = ['abcde', 'fghij', 'klmno', 'pqrst', 'afkp', 'bglq', 'chmr', 'dins', 'ejot']
 
 
     print "*"*79
     print "Ten million candidates is too many."
-    print 
+    print
     print "By this one I can see I need to drastically prune the tree."
     print "Consider building the grid while defining 'good guesses'..."
     print "This way I can check for stupid partial solutions and prune their"
